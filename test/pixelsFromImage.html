@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<img id="scream" src="img.jpg" width="100" height="100">
+<canvas id="myCanvas" width="100" height="100"></canvas>
+<div id="output" style="display:block;">Pixel array goes here.</div>
+
+<script>
+var pixel = [];
+var colors = [[255, 255, 255], [228, 228, 228], [136, 136, 136], [34, 34, 34], [255, 167, 209], [229, 0, 0],
+[229, 149, 0], [160, 106, 66], [229, 217, 0], [148, 224, 68], [2, 190, 1], [0, 211, 211],
+[0, 131, 199], [0, 0, 234], [207, 110, 228], [130, 0, 128]];
+
+document.getElementById("scream").onload = function() {
+    var arr = [];
+
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    var img = document.getElementById("scream");
+    ctx.drawImage(img, 0, 0);
+    var imgData = ctx.getImageData(0, 0, c.width, c.height);
+    // invert colors
+    for (var i = 0; i < imgData.data.length; i += 4) {
+      var r = imgData.data[i];
+      var g = imgData.data[i+1];
+      var b = imgData.data[i+2];
+      var diff = colors.map(function(color) {
+        return Math.abs(color[0] - r) + Math.abs(color[1] - g) + Math.abs(color[2] - b)
+      });
+      var minDiffIndex = 0;
+      for (var j = 1; j < diff.length; j++) {
+        if (diff[j] <= diff[minDiffIndex])
+          minDiffIndex = j;
+      }
+      imgData.data[i] = colors[minDiffIndex][0];
+      imgData.data[i+1] = colors[minDiffIndex][1];
+      imgData.data[i+2] = colors[minDiffIndex][2];
+      imgData.data[i+3] = 255;
+      arr.push(minDiffIndex);
+      /*
+        imgData.data[i] = 255 - imgData.data[i];
+        imgData.data[i+1] = 255 - imgData.data[i+1];
+        imgData.data[i+2] = 255 - imgData.data[i+2];
+        imgData.data[i+3] = 255;
+      */
+    }
+    ctx.putImageData(imgData, 0, 0);
+    // console.log(arr);
+    document.getElementById("output").innerHTML = arr.join(',');
+};
+</script>
+
+</body>
+</html>

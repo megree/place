@@ -1,14 +1,15 @@
 .wrap {
   height: auto;
-  display: flex;
+  /* display: flex; */
   justify-content: center;
   align-items: center;
-  padding: 5px;
+  padding: 10px;
+  flex-wrap: nowrap;
 }
 
 .canvas {
-  width: 640px;
-  height: 640px;
+  width: 1000px;
+  height: 1000px;
 }
 
 .pixel {
@@ -16,7 +17,7 @@
   width: 10px;
   height: 10px;
   float: left;
-  border: solid 1px #bbb;
+  /* border: solid 1px #bbb; */
   cursor: pointer;
 }
 
@@ -26,8 +27,5 @@
   height: 50px;
   float: left;
   border: solid 1px black;
-}
-
-.red {
-  background-color: red;
+  cursor: pointer;
 }
