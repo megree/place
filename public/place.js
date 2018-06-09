@@ -14,10 +14,32 @@ $(function () {
 
   var pagePixels = [];
 
+  var pixelSize = 10;
+
+  $('.palette .color:nth-child(' + (swatch + 1) + ')').css('border', 'solid 2px black');
   $('.palette').children('.color').each(function (i) {
     $(this).css('background-color', 'rgb(' + colors[i] + ')').click(function() {
+      $('.palette .color:nth-child(' + (swatch + 1) + ')').css('border', 'none');
       swatch = $(this).index();
+      $(this).css('border', 'solid 2px black');
+      // $('.options').css('background-color', 'rgb(' + colors[i] + ')')
     });
+  });
+
+  $('.zoomIn').on('click', function() {
+    if (pixelSize >= 20) return;
+    $('.zoomOut').fadeTo(200, 1);
+    pixelSize++;
+    reconstructCanvas();
+    if (pixelSize == 20) $(this).fadeTo(200, .1);
+  });
+
+  $('.zoomOut').on('click', function() {
+    if (pixelSize <= 2) return;
+    $('.zoomIn').fadeTo(200, 1);
+    pixelSize--;
+    reconstructCanvas();
+    if (pixelSize == 2) $(this).fadeTo(200, .1);
   });
 
   socket.on('connect', function() {
@@ -59,6 +81,7 @@ $(function () {
     duration--;
 
     var setIntervalID = setInterval(function() {
+      console.log($('.canvas').scrollLeft());
       minute = Math.floor(duration / 60);
       second = duration - minute * 60
       $('.timer').text(minute + ':' + (second < 10? '0' + second : second));
@@ -66,9 +89,14 @@ $(function () {
       if (duration < -1) {
         clearInterval(setIntervalID);
         isTimeout = false;
-        $('.timer').hide();
+        $('.timer').text('0:00');
       }
     }, 1000)
+  }
+
+  function reconstructCanvas() {
+    $('.pixel').css('width', pixelSize + 'px').css('height', pixelSize + 'px');
+    $('.canvas').css('width', pixelSize * 100 + 'px').css('height', pixelSize * 100 + 'px');
   }
 
 });
